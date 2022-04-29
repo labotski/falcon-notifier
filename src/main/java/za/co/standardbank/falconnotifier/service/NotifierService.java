@@ -20,8 +20,6 @@ import za.co.standardbank.falconnotifier.model.NotifierEntity;
 @Service
 public class NotifierService {
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
-
 	public void createRowCell(Row row, int cellIndex, String cellName) {
 		Cell cell = row.createCell(cellIndex);
 		cell.setCellValue(cellName);
@@ -74,7 +72,7 @@ public class NotifierService {
 		createRowCell(row, i++, "PreferedThemeName");
 	}
 
-	public void generateReport(List<NotifierEntity> data) throws IOException {
+	public void generateReport(List<NotifierEntity> data, String date) throws IOException {
 		InputStream file = NotifierService.class.getClassLoader().getResourceAsStream("report.xlsx");
 		XSSFWorkbook workbook = new XSSFWorkbook(file);
 		Iterator<Sheet> sheetIterator = workbook.iterator();
@@ -130,10 +128,10 @@ public class NotifierService {
 			}
 		}
 
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		
 
 		try (FileOutputStream outFile = new FileOutputStream(
-				new File("CasesByAnalystsReport/report_" + dateFormat.format(timestamp) + ".xlsx"))) {
+				new File("report_" + date + ".xlsx"))) {
 			workbook.write(outFile);
 		}
 
