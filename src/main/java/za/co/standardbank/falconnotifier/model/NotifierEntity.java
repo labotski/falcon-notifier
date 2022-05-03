@@ -1,5 +1,7 @@
 package za.co.standardbank.falconnotifier.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -35,7 +37,7 @@ public class NotifierEntity {
 	private String cclientXid;
 
 	@Column(name = "ACTION_DTTM")
-	private String cactionDttm;
+	private Timestamp cactionDttm;
 
 	@Column(name = "FRAUD_TYPE_CD")
 	private String fraudTypeCd;
@@ -65,10 +67,10 @@ public class NotifierEntity {
 	private String caseActionCd3;
 
 	@Column(name = "CASE_CREATED_DTTM")
-	private String caseCreatedDttm;
+	private Timestamp caseCreatedDttm;
 
 	@Column(name = "CASE_OPENED_DTTM")
-	private String caseOpenedDttm;
+	private Timestamp caseOpenedDttm;
 
 	@Column(name = "PROTECTED_AMT")
 	private String protectedAmt;
@@ -95,7 +97,7 @@ public class NotifierEntity {
 	private String activeTennantCd;
 
 	@Column(name = "CREATED_DTTM")
-	private String createdDttm;
+	private Timestamp createdDttm;
 
 	@Column(name = "CREATED_BY_USER_ID")
 	private String createdByUserId;
@@ -104,7 +106,7 @@ public class NotifierEntity {
 	private String createdByModuleCd;
 
 	@Column(name = "LAST_UPDATED_DTTM")
-	private String lastUpdatedDttm;
+	private Timestamp lastUpdatedDttm;
 
 	@Column(name = "LAST_UPDATED_BY_USER_ID")
 	private String lastUpdatedByUserId;
@@ -133,7 +135,16 @@ public class NotifierEntity {
 	@Column(name = "DEFAULT_TENANT_CD")
 	private String defaultTenantCd;
 
+	@Column(name = "DEFAULT_LOCALE_CD")
+	private String defaultLocaleCd;
+
 	@Column(name = "PREFERRED_THEME_NAME")
 	private String preferedThemeName;
+
+	@Column(name = "PRI_WORK_GRP_ID")
+	private String priWorkGrpId;
+
+	@Column(name = "STARTING_PAGE")
+	private String startingPage;
 
 }
