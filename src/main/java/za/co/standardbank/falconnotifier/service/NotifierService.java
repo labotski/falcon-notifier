@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -15,7 +17,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import za.co.standardbank.falconnotifier.model.NotifierEntity;
+import za.co.standardbank.falconnotifier.entites.falcon.CsCaseStatusEntity;
+import za.co.standardbank.falconnotifier.entites.falcon.FalconEntity;
 
 @Service
 public class NotifierService {
@@ -28,10 +31,10 @@ public class NotifierService {
 	}
 
 	private String formatTimestamp(Timestamp t) {
-		return new SimpleDateFormat("dd-MMM-YY hh-mm.ss.SSSSSSSSS a").format(t);
+		return new SimpleDateFormat("dd-MMM-YY hh.mm.ss.SSSSSSSSS a").format(t);
 	}
 
-	public void generateReport(List<NotifierEntity> data) throws IOException {
+	public void generateReport(List<FalconEntity> data) throws IOException {
 		InputStream file = NotifierService.class.getClassLoader().getResourceAsStream("report.xlsx");
 		XSSFWorkbook workbook = new XSSFWorkbook(file);
 		Iterator<Sheet> sheetIterator = workbook.iterator();
@@ -39,7 +42,7 @@ public class NotifierService {
 			int i = 1;
 			Sheet sheet = sheetIterator.next();
 			if (sheet.getSheetName().equalsIgnoreCase("Export Worksheet")) {
-				for (NotifierEntity entity : data) {
+				for (FalconEntity entity : data) {
 					int j = 0;
 					Row row = sheet.createRow(i++);
 					createRowCell(row, j++, entity.getCaseHistoryId());
@@ -87,6 +90,39 @@ public class NotifierService {
 					createRowCell(row, j++, entity.getPriWorkGrpId());
 					createRowCell(row, j++, ""); // client xid duplicate fields
 					createRowCell(row, j++, entity.getStartingPage());
+				}
+			}
+		}
+
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+		try (FileOutputStream outFile = new FileOutputStream(
+				new File("report_" + dateFormat.format(timestamp) + ".xlsx"))) {
+			workbook.write(outFile);
+		}
+
+		file.close();
+
+		workbook.close();
+
+	}
+
+	public void generateCaseStatusReport(List<CsCaseStatusEntity> filteredCaseStatusList) throws IOException {
+		InputStream file = NotifierService.class.getClassLoader()
+				.getResourceAsStream("report_falcon_icm_case_status.xlsx");
+		XSSFWorkbook workbook = new XSSFWorkbook(file);
+		Iterator<Sheet> sheetIterator = workbook.iterator();
+		while (sheetIterator.hasNext()) {
+			int i = 1;
+			Sheet sheet = sheetIterator.next();
+			if (sheet.getSheetName().equalsIgnoreCase("Export Worksheet")) {
+				for (CsCaseStatusEntity entity : filteredCaseStatusList) {
+					int j = 0;
+					Row row = sheet.createRow(i++);
+					createRowCell(row, j++, entity.getCaseId());
+					createRowCell(row, j++, entity.getCaseStatus());
+					createRowCell(row, j++, entity.getLastUpdate().toString());
+					createRowCell(row, j++, entity.getCreated().toString());
 				}
 			}
 		}

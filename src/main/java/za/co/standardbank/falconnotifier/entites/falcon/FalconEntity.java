@@ -1,4 +1,4 @@
-package za.co.standardbank.falconnotifier.model;
+package za.co.standardbank.falconnotifier.entites.falcon;
 
 import java.sql.Timestamp;
 
@@ -12,7 +12,7 @@ import lombok.ToString;
 @Data
 @Entity
 @ToString
-public class NotifierEntity {
+public class FalconEntity {
 
 	@Id
 	@Column(name = "CASE_HISTORY_ID")
