@@ -1,11 +1,10 @@
 package za.co.standardbank.falconnotifier.service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -34,7 +33,7 @@ public class NotifierService {
 		return new SimpleDateFormat("dd-MMM-YY hh.mm.ss.SSSSSSSSS a").format(t);
 	}
 
-	public void generateReport(List<FalconEntity> data) throws IOException {
+	public void generateReport(List<FalconEntity> data, String name) throws IOException {
 		InputStream file = NotifierService.class.getClassLoader().getResourceAsStream("report.xlsx");
 		XSSFWorkbook workbook = new XSSFWorkbook(file);
 		Iterator<Sheet> sheetIterator = workbook.iterator();
@@ -93,21 +92,18 @@ public class NotifierService {
 				}
 			}
 		}
-
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-		try (FileOutputStream outFile = new FileOutputStream(
-				new File("report_" + dateFormat.format(timestamp) + ".xlsx"))) {
-			workbook.write(outFile);
+		if (name == null) {
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			name = dateFormat.format(timestamp);
 		}
-
+		createFile(workbook, "CasesByAnalystsReport/", name);
 		file.close();
-
 		workbook.close();
 
 	}
 
-	public void generateCaseStatusReport(List<CsCaseStatusEntity> filteredCaseStatusList) throws IOException {
+	public void generateCaseStatusReport(List<CsCaseStatusEntity> filteredCaseStatusList, String name)
+			throws IOException {
 		InputStream file = NotifierService.class.getClassLoader()
 				.getResourceAsStream("report_falcon_icm_case_status.xlsx");
 		XSSFWorkbook workbook = new XSSFWorkbook(file);
@@ -127,17 +123,21 @@ public class NotifierService {
 			}
 		}
 
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-		try (FileOutputStream outFile = new FileOutputStream(
-				new File("report_" + dateFormat.format(timestamp) + ".xlsx"))) {
-			workbook.write(outFile);
+		if (name == null) {
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			name = dateFormat.format(timestamp);
 		}
-
+		createFile(workbook, "FalconIcmCaseStatusReport/", name);
 		file.close();
-
 		workbook.close();
 
+	}
+
+	private void createFile(XSSFWorkbook workbook, String folderName, String fileName)
+			throws FileNotFoundException, IOException {
+		try (FileOutputStream outFile = new FileOutputStream(new File(folderName + "report_" + fileName + ".xlsx"))) {
+			workbook.write(outFile);
+		}
 	}
 
 }
