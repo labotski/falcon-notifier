@@ -37,4 +37,7 @@ public class CsCaseStatusEntity {
 		this.created = created;
 	}
 
+	public CsCaseStatusEntity() {
+
+	}
 }
