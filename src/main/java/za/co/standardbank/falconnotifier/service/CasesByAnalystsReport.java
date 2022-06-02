@@ -14,7 +14,7 @@ import za.co.standardbank.falconnotifier.entites.falcon.FalconEntity;
 public class CasesByAnalystsReport implements Report<FalconEntity> {
 
 	@Override
-	public void generate(List<FalconEntity> list) throws Exception {
+	public void generate(List<FalconEntity> list, String name) throws Exception {
 		InputStream file = CasesByAnalystsReport.class.getClassLoader().getResourceAsStream("report.xlsx");
 		XSSFWorkbook workbook = new XSSFWorkbook(file);
 		Iterator<Sheet> sheetIterator = workbook.iterator();
@@ -73,7 +73,7 @@ public class CasesByAnalystsReport implements Report<FalconEntity> {
 				}
 			}
 		}
-		createFile(workbook, "CasesByAnalysts/", fileName());
+		createFile(workbook, "CasesByAnalysts/", fileName(name) + "_size_" + list.size());
 		file.close();
 		workbook.close();
 	}

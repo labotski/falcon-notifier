@@ -18,4 +18,7 @@ public interface IcmRepository extends CrudRepository<FalconCaseIdEntity, Long> 
 	@Query(value = "select FALCON_CASE_ID from ic_cases where name = 'Falcon6 Import' and TRUNC(created) = TO_DATE(:date, 'YYYY-MM-DD')", nativeQuery = true)
 	List<FalconCaseIdEntity> fetchFalconCaseIdsByDate(@Param("date") String date);
 
+	@Query(value = "select count(*) from ic_cases c where name = 'Falcon6 Import' and c.CREATED  > TRUNC(sysdate)", nativeQuery = true)
+	Long healthCheckIcCases();
+
 }

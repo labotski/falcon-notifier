@@ -11,7 +11,13 @@ public class ReportFactory {
                 report = new CasesByAnalystsReport();
                 break;
             case FALCON_ICM_CASE_STATUS:
-                report = new FalconIcmCaseStatusReport();
+                report = new FalconIcmCaseStatusReport("FalconIcmCaseStatus/");
+                break;
+            case FALCON_ICM_CASE_STATUS_UPDATE_PROCESS_FLAG:
+                report = new FalconIcmCaseStatusReport("FalconIcmCaseStatus/AfterUpdateProcessFlag/");
+                break;
+            case HEALTH_CHECK:
+                report = new HealthCheckReport("HealthCheckStatus/");
                 break;
             default:
                 throw new IllegalArgumentException("Wrong report type: " + type);
